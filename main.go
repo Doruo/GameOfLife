@@ -1,6 +1,7 @@
 package main
 
+import "github.com/doruo/gameoflife/game"
+
 func main() {
-	m := newSeed(4)
-	showMatrix(*m)
+	game.Show(*game.NewSeed(3))
 }
