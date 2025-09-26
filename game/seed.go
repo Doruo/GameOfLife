@@ -1,9 +1,11 @@
 package game
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
-func NewSeed(n int) *Matrix {
-	m := NewMatrix(n)
+func NewSeed(n int) *Grid {
+	m := *NewGrid(n)
 	for range n {
 		m[randomInt(n)][randomInt(n)].SetAlive(true)
 	}

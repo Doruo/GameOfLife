@@ -1,7 +1,19 @@
 package main
 
-import "github.com/doruo/gameoflife/game"
+import (
+	"fmt"
+	"time"
+
+	"github.com/doruo/gameoflife/game"
+)
 
 func main() {
-	game.Show(*game.NewSeed(3))
+	g := game.NewGameState(3).Grid
+
+	for {
+		g.UpdateCells()
+		g.Show()
+		time.Sleep(1 * time.Second)
+		fmt.Println(" ")
+	}
 }
