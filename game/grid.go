@@ -16,52 +16,49 @@ func NewGrid(len int) *Grid {
 	return &m
 }
 
-// Updates all cells, return all remaining alive cell positions
-func (newGrid Grid) UpdateCells(oldGrid Grid) [][]int {
+// --------------------------------------------
 
-	alives := make([][]int, len(oldGrid)*len(oldGrid))
-	for i := range oldGrid {
-		for j := range oldGrid[i] {
-			// For each cell
-			c := oldGrid.GetCell(i, j)
+// Updates all cells, return all remaining alive cell positions
+func (newGrid *Grid) UpdateCells(oldGrid *Grid) [][]int {
+
+	fmt.Printf("DEBUG UpdateCells: Start, newGrid of size: %dx%d\n", len(*newGrid), len((*newGrid)[0]))
+
+	for i := range *oldGrid {
+		for j := range (*oldGrid)[i] {
 			// Update cell and its adjacents
-			//newGrid.UpdateCellAdjs(i, j, oldGrid)
 			newGrid.UpdateCell(i, j, oldGrid)
-			if c.IsAlive() {
-				alives = append(alives, []int{i, j})
-			}
 		}
 	}
-	return alives
+
+	return newGrid.GetAlivesPos()
 }
 
-func (newGrid Grid) UpdateCell(i, j int, oldGrid Grid) {
-	newGrid.UpdateCellAdjs(i, j, oldGrid)
+// --------------------------------------------
+
+func (newGrid *Grid) UpdateCell(i, j int, oldGrid *Grid) {
+
+	oldGrid.UpdateCellAdjs(i, j)
 	cOld := oldGrid.GetCell(i, j)
-	cNew := newGrid.GetCell(i, j)
-	cNew.SetAlive(cOld.GetUpdatedState())
+	cOld.UpdateState()
+	newGrid.SetCell(i, j, *cOld)
 }
 
-func (newGrid Grid) UpdateCellAdjs(i, j int, oldGrid Grid) {
+// --------------------------------------------
 
+func (oldGrid *Grid) UpdateCellAdjs(i, j int) {
 	adjs := make([]cell.Cell, 0, 8)
-	// For each possible adjacent position
+
 	for _, position := range GetAdjacentsPos() {
-		// Verify grid border case (to avoid Ci = -1)
 		if oldGrid.IsValidPosition(i+position[0], j+position[1]) {
-			// Appends each adjacent alive cell
 			if adjCell := oldGrid.GetCell(i+position[0], j+position[1]); adjCell.IsAlive() {
 				adjs = append(adjs, *adjCell)
 			}
-
 		}
 	}
-	newGrid.GetCell(i, j).SetAdjacent(adjs)
+	oldGrid.GetCell(i, j).SetAdjacent(adjs)
 }
 
-func showCell(cell *cell.Cell) {
-	fmt.Print(cell.ToString(), " ")
-}
+// --------------------------------------------
 
 func (m Grid) Show() {
 	for i := range m {
@@ -71,6 +68,12 @@ func (m Grid) Show() {
 		fmt.Println(" ")
 	}
 }
+
+func showCell(cell *cell.Cell) {
+	fmt.Print(cell.ToString(), " ")
+}
+
+// --------------------------------------------
 
 func (m Grid) GetAlivesPos() [][]int {
 	alives := make([][]int, len(m))
@@ -88,6 +91,10 @@ func (m Grid) GetAlivesPos() [][]int {
 
 func (m Grid) GetCell(i, j int) *cell.Cell {
 	return &m[i][j]
+}
+
+func (m Grid) SetCell(i, j int, c cell.Cell) {
+	m[i][j] = c
 }
 
 func (m Grid) IsValidPosition(i, j int) bool {
