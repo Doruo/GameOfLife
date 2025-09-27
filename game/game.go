@@ -17,8 +17,8 @@ type GameState struct {
 
 func NewGameState(len int) *GameState {
 	return &GameState{
-		gridOld:    *NewGrid(len),
-		gridNew:    *NewSeed(len),
+		gridOld:    *NewSeed(len),
+		gridNew:    *NewGrid(len),
 		length:     len,
 		alives:     make([][]int, len, len*len),
 		generation: 1,
@@ -32,20 +32,24 @@ func (gs *GameState) Play() {
 		// Display
 		gs.show()
 		// Prepare next iteration
-		gs.updateGenerationNumber()
+		gs.prepareNextIteration()
 		time.Sleep(1 * time.Second)
 	}
 }
 
 func (gs *GameState) update() {
-	gs.GetOldGrid().UpdateCells(gs.GetNextGrid())
+	gs.GetNextGrid().UpdateCells(gs.GetOldGrid())
 	gs.SetAlives(gs.GetNextGrid().GetAlivesPos())
+}
+
+func (gs *GameState) prepareNextIteration() {
+	gs.updateGenerationNumber()
 	gs.transfertOldToNextGrid()
 }
 
 func (gs *GameState) show() {
 	gs.showHeader()
-	gs.GetOldGrid().Show()
+	gs.GetNextGrid().Show()
 }
 
 func (gs *GameState) showHeader() {

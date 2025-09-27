@@ -17,20 +17,17 @@ func NewGrid(len int) *Grid {
 }
 
 // Updates all cells, return all remaining alive cell positions
-func (oldGrid Grid) UpdateCells(newGrid Grid) [][]int {
+func (newGrid Grid) UpdateCells(oldGrid Grid) [][]int {
 
 	alives := make([][]int, len(oldGrid)*len(oldGrid))
-
 	for i := range oldGrid {
 		for j := range oldGrid[i] {
-
 			// For each cell
 			c := oldGrid.GetCell(i, j)
-
 			// Update cell and its adjacents
+			//newGrid.UpdateCellAdjs(i, j, oldGrid)
+			newGrid.UpdateCell(i, j, oldGrid)
 			if c.IsAlive() {
-				//newGrid.UpdateCellAdjs(i, j, oldGrid)
-				newGrid.UpdateCell(i, j, oldGrid)
 				alives = append(alives, []int{i, j})
 			}
 		}
@@ -39,6 +36,7 @@ func (oldGrid Grid) UpdateCells(newGrid Grid) [][]int {
 }
 
 func (newGrid Grid) UpdateCell(i, j int, oldGrid Grid) {
+	newGrid.UpdateCellAdjs(i, j, oldGrid)
 	cOld := oldGrid.GetCell(i, j)
 	cNew := newGrid.GetCell(i, j)
 	cNew.SetAlive(cOld.GetUpdatedState())
@@ -46,7 +44,7 @@ func (newGrid Grid) UpdateCell(i, j int, oldGrid Grid) {
 
 func (newGrid Grid) UpdateCellAdjs(i, j int, oldGrid Grid) {
 
-	adjs := make([]cell.Cell, 8)
+	adjs := make([]cell.Cell, 0, 8)
 	// For each possible adjacent position
 	for _, position := range GetAdjacentsPos() {
 		// Verify grid border case (to avoid Ci = -1)
