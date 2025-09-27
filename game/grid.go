@@ -21,8 +21,6 @@ func NewGrid(len int) *Grid {
 // Updates all cells, return all remaining alive cell positions
 func (newGrid *Grid) UpdateCells(oldGrid *Grid) [][]int {
 
-	fmt.Printf("DEBUG UpdateCells: Start, newGrid of size: %dx%d\n", len(*newGrid), len((*newGrid)[0]))
-
 	for i := range *oldGrid {
 		for j := range (*oldGrid)[i] {
 			// Update cell and its adjacents
