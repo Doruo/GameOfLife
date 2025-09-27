@@ -7,44 +7,49 @@ import (
 	"github.com/doruo/gameoflife/game/color"
 )
 
-type GameState struct {
+type Game struct {
 	gridOld    Grid // Previous generation
 	gridNew    Grid // New generation
-	length     int
+	size       int
 	alives     [][]int
 	generation int
 	debug      bool
 }
 
-func NewGameState(len int) *GameState {
-	return &GameState{
-		gridOld:    *NewSeed(len),
-		gridNew:    *NewGrid(len),
-		length:     len,
-		alives:     make([][]int, len, len*len),
+func NewGame(size int) *Game {
+	return &Game{
+		gridOld:    *NewSeed(size),
+		gridNew:    *NewGrid(size),
+		size:       size,
+		alives:     make([][]int, size, size*size),
 		generation: 1,
 		debug:      false,
 	}
 }
 
-func (gs *GameState) Play() {
+func (gs *Game) Play() {
+	// Game loop
 	for {
 		// Initial
-		gs.SetAlives(gs.GetOldGrid().GetAlivesPos())
+		gs.intialize()
 		// Display
 		gs.show()
 
 		// Prepare next iteration
 		gs.update()
-		gs.transfertOldToNextGrid()
 		gs.prepareNextIteration()
+		// Game speed
 		time.Sleep(1 * time.Second)
 	}
 }
 
+func (gs *Game) intialize() {
+	gs.SetAlives(gs.GetOldGrid().GetAlivesPos())
+}
+
 // --------------------------------------------
 
-func (gs *GameState) update() {
+func (gs *Game) update() {
 	if gs.GetDebug() {
 		fmt.Printf("DEBUG - Before UpdateCells:\n")
 		fmt.Printf("  OldGrid population: %d\n", len(gs.GetOldGrid().GetAlivesPos()))
@@ -61,11 +66,12 @@ func (gs *GameState) update() {
 	}
 }
 
-func (gs *GameState) prepareNextIteration() {
+func (gs *Game) prepareNextIteration() {
+	gs.transfertOldToNextGrid()
 	gs.updateGenerationNumber()
 }
 
-func (gs *GameState) transfertOldToNextGrid() {
+func (gs *Game) transfertOldToNextGrid() {
 
 	if gs.GetDebug() {
 		fmt.Printf("DEBUG TRANSFERT - Before:\n")
@@ -74,7 +80,7 @@ func (gs *GameState) transfertOldToNextGrid() {
 	}
 
 	gs.gridOld = gs.gridNew
-	gs.gridNew = *NewGrid(gs.GetLength())
+	gs.gridNew = *NewGrid(gs.GetSize())
 
 	if gs.GetDebug() {
 		fmt.Printf("DEBUG TRANSFERT - After:\n")
@@ -86,12 +92,17 @@ func (gs *GameState) transfertOldToNextGrid() {
 
 // --------------------------------------------
 
-func (gs *GameState) show() {
+func clearDisplay() {
+	fmt.Print("\033[H\033[2J")
+}
+
+func (gs *Game) show() {
+	clearDisplay()
 	gs.showHeader()
 	gs.GetOldGrid().Show()
 }
 
-func (gs *GameState) showHeader() {
+func (gs *Game) showHeader() {
 	fmt.Println(color.Purple(), "------------------", color.Reset())
 	fmt.Println(color.Cyan(), "  Generation:", gs.GetGeneration(), color.Reset())
 	fmt.Println(color.Cyan(), "  Population:", len(*gs.GetAlives()), color.Reset())
@@ -100,34 +111,34 @@ func (gs *GameState) showHeader() {
 
 // --------------------------------------------
 
-func (gs *GameState) GetOldGrid() *Grid {
+func (gs *Game) GetOldGrid() *Grid {
 	return &gs.gridOld
 }
 
-func (gs *GameState) GetNextGrid() *Grid {
+func (gs *Game) GetNextGrid() *Grid {
 	return &gs.gridNew
 }
 
-func (gs *GameState) GetLength() int {
-	return gs.length
+func (gs *Game) GetSize() int {
+	return gs.size
 }
 
-func (gs *GameState) GetAlives() *[][]int {
+func (gs *Game) GetAlives() *[][]int {
 	return &gs.alives
 }
 
-func (gs *GameState) GetDebug() bool {
+func (gs *Game) GetDebug() bool {
 	return gs.debug
 }
 
-func (gs *GameState) SetAlives(alives [][]int) {
+func (gs *Game) SetAlives(alives [][]int) {
 	gs.alives = alives
 }
 
-func (gs *GameState) GetGeneration() int {
+func (gs *Game) GetGeneration() int {
 	return gs.generation
 }
 
-func (gs *GameState) updateGenerationNumber() {
+func (gs *Game) updateGenerationNumber() {
 	gs.generation++
 }
