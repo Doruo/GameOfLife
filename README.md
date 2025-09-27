@@ -1,18 +1,25 @@
 # GameOfLife
 
-Implementation of John Horton Conway 1970's Game of Life, in go language. It is a cellular automatron, used in reasearch and biology to simulates life in a cellular form.
+Implementation of John Horton Conway 1970's Game of Life, in Go language. With integrated terminal interface.
+
+It is a cellular automatron, used in reasearch and biology to simulates life in a cellular form.
+
+No external dependencies, nor IA used in code.
 
 ## How to play
 
+### Windows
 
-- Using bash script:
-
-```bash
-bash run.sh
+```powershell
+git clone https://github.com/Doruo/GameOfLife.git
+Set-Location GameOfLife
+go run main.go
 ```
 
-- Or directly in Go:
+### Linux
 
-```go
-go run main.go
+```bash
+git clone https://github.com/Doruo/GameOfLife.git
+cd GameOfLife
+bash run.sh
 ```
