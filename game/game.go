@@ -13,6 +13,7 @@ type Game struct {
 	size       int
 	alives     [][]int
 	generation int
+	lag        int // Lag frame/milliseconds
 	debug      bool
 }
 
@@ -23,6 +24,7 @@ func NewGame(size int) *Game {
 		size:       size,
 		alives:     make([][]int, size, size*size),
 		generation: 1,
+		lag:        500,
 		debug:      false,
 	}
 }
@@ -40,7 +42,7 @@ func (gs *Game) Play() {
 		gs.prepareNextIteration()
 
 		// Game speed
-		time.Sleep(1 * time.Second)
+		time.Sleep(time.Duration(gs.GetLag()) * time.Millisecond)
 	}
 }
 
@@ -88,7 +90,7 @@ func (gs *Game) transfertOldToNextGrid() {
 		fmt.Printf("  oldGrid pop: %d\n", len(gs.oldGrid.GetAlivesPos()))
 		fmt.Printf("  newGrid pop: %d\n", len(gs.newGrid.GetAlivesPos()))
 	}
-	fmt.Printf("---\n")
+	fmt.Printf("Press [Ctrl + C] to stop.\n")
 }
 
 // --------------------------------------------
@@ -126,6 +128,10 @@ func (gs *Game) GetSize() int {
 
 func (gs *Game) GetAlives() *[][]int {
 	return &gs.alives
+}
+
+func (gs *Game) GetLag() int {
+	return gs.lag
 }
 
 func (gs *Game) GetDebug() bool {
