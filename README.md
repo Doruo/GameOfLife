@@ -21,5 +21,5 @@ go run main.go
 ```bash
 git clone https://github.com/Doruo/GameOfLife.git
 cd GameOfLife
-bash run.sh
+go run main.go
 ```
