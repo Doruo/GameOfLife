@@ -15,10 +15,14 @@ func NewCell() *Cell {
 	}
 }
 
+// --------------------------------------------
+
 // Update cell state based on Conway's rules
 func (c *Cell) UpdateState() {
 	c.isAlive = c.GetUpdatedState()
 }
+
+// --------------------------------------------
 
 // Returns updated cell state based on Conway's rules.
 func (c *Cell) GetUpdatedState() bool {
@@ -45,6 +49,8 @@ func (c *Cell) SetAlive(isAlive bool) {
 func (c *Cell) SetAdjacent(adjs []Cell) {
 	c.Adjacents = adjs
 }
+
+// --------------------------------------------
 
 func (c *Cell) ToString() string {
 	if c.isAlive {
