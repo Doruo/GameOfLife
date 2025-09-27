@@ -2,16 +2,14 @@ package game
 
 import (
 	"fmt"
-
-	"github.com/doruo/gameoflife/cell"
 )
 
-type Grid [][]cell.Cell
+type Grid [][]Cell
 
 func NewGrid(len int) *Grid {
 	m := make(Grid, len)
 	for i := range len {
-		m[i] = make([]cell.Cell, len)
+		m[i] = make([]Cell, len)
 	}
 	return &m
 }
@@ -44,7 +42,7 @@ func (newGrid *Grid) UpdateCell(i, j int, oldGrid *Grid) {
 // --------------------------------------------
 
 func (oldGrid *Grid) UpdateCellAdjs(i, j int) {
-	adjs := make([]cell.Cell, 0, 8)
+	adjs := make([]Cell, 0, 8)
 
 	for _, position := range GetAdjacentsPos() {
 		if oldGrid.IsValidPosition(i+position[0], j+position[1]) {
@@ -67,7 +65,7 @@ func (m Grid) Show() {
 	}
 }
 
-func showCell(cell *cell.Cell) {
+func showCell(cell *Cell) {
 	fmt.Print(cell.ToString(), " ")
 }
 
@@ -87,11 +85,11 @@ func (m Grid) GetAlivesPos() [][]int {
 	return alives
 }
 
-func (m Grid) GetCell(i, j int) *cell.Cell {
+func (m Grid) GetCell(i, j int) *Cell {
 	return &m[i][j]
 }
 
-func (m Grid) SetCell(i, j int, c cell.Cell) {
+func (m Grid) SetCell(i, j int, c Cell) {
 	m[i][j] = c
 }
 

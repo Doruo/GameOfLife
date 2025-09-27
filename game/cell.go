@@ -1,4 +1,4 @@
-package cell
+package game
 
 import "github.com/doruo/gameoflife/game/color"
 

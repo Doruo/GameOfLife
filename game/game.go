@@ -8,8 +8,8 @@ import (
 )
 
 type Game struct {
-	gridOld    Grid // Previous generation
-	gridNew    Grid // New generation
+	oldGrid    Grid // Previous generation
+	newGrid    Grid // New generation
 	size       int
 	alives     [][]int
 	generation int
@@ -18,8 +18,8 @@ type Game struct {
 
 func NewGame(size int) *Game {
 	return &Game{
-		gridOld:    *NewSeed(size),
-		gridNew:    *NewGrid(size),
+		oldGrid:    *NewSeed(size),
+		newGrid:    *NewGrid(size),
 		size:       size,
 		alives:     make([][]int, size, size*size),
 		generation: 1,
@@ -38,6 +38,7 @@ func (gs *Game) Play() {
 		// Prepare next iteration
 		gs.update()
 		gs.prepareNextIteration()
+
 		// Game speed
 		time.Sleep(1 * time.Second)
 	}
@@ -57,7 +58,7 @@ func (gs *Game) update() {
 	}
 
 	// Update new cells
-	gs.SetAlives(gs.gridNew.UpdateCells(&gs.gridOld))
+	gs.SetAlives(gs.newGrid.UpdateCells(&gs.oldGrid))
 
 	if gs.GetDebug() {
 		fmt.Printf("DEBUG - After UpdateCells:\n")
@@ -75,17 +76,17 @@ func (gs *Game) transfertOldToNextGrid() {
 
 	if gs.GetDebug() {
 		fmt.Printf("DEBUG TRANSFERT - Before:\n")
-		fmt.Printf("  oldGrid pop: %d\n", len(gs.gridOld.GetAlivesPos()))
-		fmt.Printf("  newGrid pop: %d\n", len(gs.gridNew.GetAlivesPos()))
+		fmt.Printf("  oldGrid pop: %d\n", len(gs.oldGrid.GetAlivesPos()))
+		fmt.Printf("  newGrid pop: %d\n", len(gs.newGrid.GetAlivesPos()))
 	}
 
-	gs.gridOld = gs.gridNew
-	gs.gridNew = *NewGrid(gs.GetSize())
+	gs.oldGrid = gs.newGrid
+	gs.newGrid = *NewGrid(gs.GetSize())
 
 	if gs.GetDebug() {
 		fmt.Printf("DEBUG TRANSFERT - After:\n")
-		fmt.Printf("  oldGrid pop: %d\n", len(gs.gridOld.GetAlivesPos()))
-		fmt.Printf("  newGrid pop: %d\n", len(gs.gridNew.GetAlivesPos()))
+		fmt.Printf("  oldGrid pop: %d\n", len(gs.oldGrid.GetAlivesPos()))
+		fmt.Printf("  newGrid pop: %d\n", len(gs.newGrid.GetAlivesPos()))
 	}
 	fmt.Printf("---\n")
 }
@@ -112,11 +113,11 @@ func (gs *Game) showHeader() {
 // --------------------------------------------
 
 func (gs *Game) GetOldGrid() *Grid {
-	return &gs.gridOld
+	return &gs.oldGrid
 }
 
 func (gs *Game) GetNextGrid() *Grid {
-	return &gs.gridNew
+	return &gs.newGrid
 }
 
 func (gs *Game) GetSize() int {
