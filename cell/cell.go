@@ -1,40 +1,32 @@
 package cell
 
+import "github.com/doruo/gameoflife/game/color"
+
 type Cell struct {
-	isAlive   bool
-	adjacents []Cell
+	IsAlive   bool
+	Adjacents []Cell
 }
 
-// Creates a new cell with 8 adjacents in memory, all dead by default.
+// Creates a new cell with alive adjacents in memory.
 func NewCell() *Cell {
 	return &Cell{
-		isAlive:   false,
-		adjacents: make([]Cell, 8),
+		IsAlive:   false,
+		Adjacents: make([]Cell, 8),
 	}
 }
 
 // Update cell state based on Conway's rules
 func (c *Cell) UpdateState() {
-	c.SetAlive(c.GetUpdatedState())
+	c.IsAlive = c.GetUpdatedState()
 }
 
 // Returns updated cell state based on Conway's rules.
 func (c *Cell) GetUpdatedState() bool {
-	return (len(c.adjacents) == 3) || (len(c.adjacents) == 2 && c.isAlive)
-}
-
-// Get current state (false => dead, true => alive).
-func (c *Cell) IsAlive() bool {
-	return c.isAlive
-}
-
-// Get current state (false => dead, true => alive).
-func (c *Cell) GetAdjacents() []Cell {
-	return c.adjacents
+	return (len(c.Adjacents) == 3) || (len(c.Adjacents) == 2 && c.IsAlive)
 }
 
 func (c *Cell) IsAdjacent(c2 Cell) bool {
-	for _, cell := range c.adjacents {
+	for _, cell := range c.Adjacents {
 		if &cell == &c2 {
 			return true
 		}
@@ -42,10 +34,13 @@ func (c *Cell) IsAdjacent(c2 Cell) bool {
 	return false
 }
 
-func (c *Cell) SetAlive(state bool) {
-	c.isAlive = state
+func (c *Cell) SetAdjacent(adjs []Cell) {
+	c.Adjacents = adjs
 }
 
-func (c *Cell) SetAdjacents(adjs []Cell) {
-	c.adjacents = adjs
+func (c *Cell) ToString() string {
+	if c.IsAlive {
+		return (color.Green + "O" + color.Reset)
+	}
+	return (color.Red + "~" + color.Reset)
 }
