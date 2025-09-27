@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	game.NewGameState(10).Play()
+	game.NewGameState(15).Play()
 }

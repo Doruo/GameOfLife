@@ -1,11 +1,11 @@
 package color
 
-var Reset = "\033[0m"
-var Red = "\033[31m"
-var Green = "\033[32m"
-var Yellow = "\033[33m"
-var Blue = "\033[34m"
-var Purple = "\033[35m"
-var Cyan = "\033[36m"
-var Gray = "\033[37m"
-var White = "\033[97m"
+func Reset() string  { return "\033[0m" }
+func Red() string    { return "\033[31m" }
+func Green() string  { return "\033[32m" }
+func Yellow() string { return "\033[33m" }
+func Blue() string   { return "\033[34m" }
+func Purple() string { return "\033[35m" }
+func Cyan() string   { return "\033[36m" }
+func Gray() string   { return "\033[37m" }
+func White() string  { return "\033[97m" }

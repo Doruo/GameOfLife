@@ -3,26 +3,26 @@ package cell
 import "github.com/doruo/gameoflife/game/color"
 
 type Cell struct {
-	IsAlive   bool
+	isAlive   bool
 	Adjacents []Cell
 }
 
 // Creates a new cell with alive adjacents in memory.
 func NewCell() *Cell {
 	return &Cell{
-		IsAlive:   false,
+		isAlive:   false,
 		Adjacents: make([]Cell, 8),
 	}
 }
 
 // Update cell state based on Conway's rules
 func (c *Cell) UpdateState() {
-	c.IsAlive = c.GetUpdatedState()
+	c.isAlive = c.GetUpdatedState()
 }
 
 // Returns updated cell state based on Conway's rules.
 func (c *Cell) GetUpdatedState() bool {
-	return (len(c.Adjacents) == 3) || (len(c.Adjacents) == 2 && c.IsAlive)
+	return (len(c.Adjacents) == 3) || (len(c.Adjacents) == 2 && c.isAlive)
 }
 
 func (c *Cell) IsAdjacent(c2 Cell) bool {
@@ -34,13 +34,21 @@ func (c *Cell) IsAdjacent(c2 Cell) bool {
 	return false
 }
 
+func (c *Cell) IsAlive() bool {
+	return c.isAlive
+}
+
+func (c *Cell) SetAlive(isAlive bool) {
+	c.isAlive = isAlive
+}
+
 func (c *Cell) SetAdjacent(adjs []Cell) {
 	c.Adjacents = adjs
 }
 
 func (c *Cell) ToString() string {
-	if c.IsAlive {
-		return (color.Green + "O" + color.Reset)
+	if c.isAlive {
+		return (color.Green() + "O" + color.Reset())
 	}
-	return (color.Red + "~" + color.Reset)
+	return (color.Red() + "~" + color.Reset())
 }

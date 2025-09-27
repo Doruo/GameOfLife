@@ -7,7 +7,7 @@ import (
 func NewSeed(n int) *Grid {
 	m := *NewGrid(n)
 	for range randomInt(n * n) {
-		m[randomInt(n)][randomInt(n)].IsAlive = true
+		m[randomInt(n)][randomInt(n)].SetAlive(true)
 	}
 	return &m
 }
