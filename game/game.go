@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/doruo/gameoflife/game/color"
@@ -29,83 +30,64 @@ func NewGame(size int) *Game {
 	}
 }
 
+func NewSeed(n int) *Grid {
+	m := *NewGrid(n)
+	for range rand.Intn(n * n) {
+		m[rand.Intn(n)][rand.Intn(n)].SetAlive(true)
+	}
+	return &m
+}
+
 func (gs *Game) Play() {
 	// Game loop
 	for {
 		// Initial
 		gs.intialize()
 		// Display
-		gs.show()
-
+		gs.display()
 		// Prepare next iteration
-		gs.update()
 		gs.prepareNextIteration()
-
-		// Game speed
-		time.Sleep(time.Duration(gs.GetLag()) * time.Millisecond)
 	}
-}
-
-func (gs *Game) intialize() {
-	gs.SetAlives(gs.GetOldGrid().GetAlivesPos())
 }
 
 // --------------------------------------------
 
-func (gs *Game) update() {
-	if gs.GetDebug() {
-		fmt.Printf("DEBUG - Before UpdateCells:\n")
-		fmt.Printf("  OldGrid population: %d\n", len(gs.GetOldGrid().GetAlivesPos()))
-		fmt.Printf("  NewGrid population: %d\n", len(gs.GetNextGrid().GetAlivesPos()))
-	}
-
-	// Update new cells
-	gs.SetAlives(gs.newGrid.UpdateCells(&gs.oldGrid))
-
-	if gs.GetDebug() {
-		fmt.Printf("DEBUG - After UpdateCells:\n")
-		fmt.Printf("  OldGrid population: %d\n", len(gs.GetOldGrid().GetAlivesPos()))
-		fmt.Printf("  NewGrid population: %d\n", len(gs.GetNextGrid().GetAlivesPos()))
-	}
+func (gs *Game) intialize() {
+	gs.SetAlives(gs.GetOldGrid().GetAlives())
 }
 
 func (gs *Game) prepareNextIteration() {
+	gs.update()
 	gs.transfertOldToNextGrid()
 	gs.updateGenerationNumber()
+	// Game speed
+	time.Sleep(time.Duration(gs.GetLag()) * time.Millisecond)
+}
+
+func (gs *Game) update() {
+	// Update new cells
+	gs.newGrid.UpdateCells(gs.GetOldGrid())
 }
 
 func (gs *Game) transfertOldToNextGrid() {
-
-	if gs.GetDebug() {
-		fmt.Printf("DEBUG TRANSFERT - Before:\n")
-		fmt.Printf("  oldGrid pop: %d\n", len(gs.oldGrid.GetAlivesPos()))
-		fmt.Printf("  newGrid pop: %d\n", len(gs.newGrid.GetAlivesPos()))
-	}
-
-	gs.oldGrid = gs.newGrid
+	gs.oldGrid = *gs.GetNextGrid()
 	gs.newGrid = *NewGrid(gs.GetSize())
-
-	if gs.GetDebug() {
-		fmt.Printf("DEBUG TRANSFERT - After:\n")
-		fmt.Printf("  oldGrid pop: %d\n", len(gs.oldGrid.GetAlivesPos()))
-		fmt.Printf("  newGrid pop: %d\n", len(gs.newGrid.GetAlivesPos()))
-	}
-	fmt.Printf("Press [Ctrl + C] to stop.\n")
 }
 
 // --------------------------------------------
+
+func (gs *Game) display() {
+	clearDisplay()
+	gs.displayHeader()
+	gs.GetOldGrid().Display()
+	fmt.Printf("Press [Ctrl + C] to stop.\n")
+}
 
 func clearDisplay() {
 	fmt.Print("\033[H\033[2J")
 }
 
-func (gs *Game) show() {
-	clearDisplay()
-	gs.showHeader()
-	gs.GetOldGrid().Show()
-}
-
-func (gs *Game) showHeader() {
+func (gs *Game) displayHeader() {
 	fmt.Println(color.Purple(), "------------------", color.Reset())
 	fmt.Println(color.Cyan(), "  Generation:", gs.GetGeneration(), color.Reset())
 	fmt.Println(color.Cyan(), "  Population:", len(*gs.GetAlives()), color.Reset())

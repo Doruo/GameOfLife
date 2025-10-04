@@ -46,7 +46,7 @@ func (c *Cell) SetAlive(isAlive bool) {
 	c.isAlive = isAlive
 }
 
-func (c *Cell) SetAdjacent(adjs []Cell) {
+func (c *Cell) SetAdjacents(adjs []Cell) {
 	c.Adjacents = adjs
 }
 
