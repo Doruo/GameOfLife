@@ -46,8 +46,8 @@ func NewSeedDeterministic(n int, density float64, seed int64) *Grid {
 	r := rand.New(rand.NewSource(seed))
 
 	m := *NewGrid(n)
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
+	for i := range n {
+		for j := range n {
 			if r.Float64() < density {
 				m[i][j].SetAlive(true)
 			}
@@ -97,11 +97,11 @@ func (oldGrid *Grid) updateCellAdjs(i, j int) {
 	oldGrid.GetCell(i, j).SetAdjacents(adjs)
 }
 
+// --------------------------------------------
+
 func displayCell(cell *Cell) {
 	fmt.Print(cell.ToString(), " ")
 }
-
-// --------------------------------------------
 
 func (m Grid) GetCell(i, j int) *Cell {
 	return &m[i][j]
