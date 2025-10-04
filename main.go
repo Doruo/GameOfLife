@@ -1,9 +1,7 @@
 package main
 
-import (
-	"github.com/doruo/gameoflife/game"
-)
+import "github.com/doruo/gameoflife/gol"
 
 func main() {
-	game.NewGameOfLife(45).Play()
+	gol.NewGame(45).Run()
 }
