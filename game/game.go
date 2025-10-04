@@ -9,24 +9,24 @@ import (
 )
 
 type Game struct {
-	oldGrid    Grid // Previous generation
-	newGrid    Grid // New generation
-	size       int
-	alives     [][]int
-	generation int
-	lag        int // Lag frame/milliseconds
-	debug      bool
+	previousGrid Grid // Previous generation
+	nextGrid     Grid // New generation
+	size         int
+	alives       [][]int // Alives cells
+	generation   int     // Generation number
+	lag          int     // Lag frame/milliseconds
+	debug        bool
 }
 
 func NewGame(size int) *Game {
 	return &Game{
-		oldGrid:    *NewSeed(size),
-		newGrid:    *NewGrid(size),
-		size:       size,
-		alives:     make([][]int, size, size*size),
-		generation: 1,
-		lag:        500,
-		debug:      false,
+		previousGrid: *NewSeed(size),
+		nextGrid:     *NewGrid(size),
+		size:         size,
+		alives:       make([][]int, size, size*size),
+		generation:   1,
+		lag:          500,
+		debug:        false,
 	}
 }
 
@@ -53,25 +53,25 @@ func (gs *Game) Play() {
 // --------------------------------------------
 
 func (gs *Game) intialize() {
-	gs.SetAlives(gs.GetOldGrid().GetAlives())
+	gs.SetAlives(gs.GetPreviousGrid().GetAlives())
 }
 
 func (gs *Game) prepareNextIteration() {
 	gs.update()
-	gs.transfertOldToNextGrid()
-	gs.updateGenerationNumber()
+	gs.transfertPreviousToNextGrid()
+	gs.updateGeneration()
 	// Game speed
 	time.Sleep(time.Duration(gs.GetLag()) * time.Millisecond)
 }
 
 func (gs *Game) update() {
 	// Update new cells
-	gs.newGrid.UpdateCells(gs.GetOldGrid())
+	gs.nextGrid.UpdateCells(gs.GetPreviousGrid())
 }
 
-func (gs *Game) transfertOldToNextGrid() {
-	gs.oldGrid = *gs.GetNextGrid()
-	gs.newGrid = *NewGrid(gs.GetSize())
+func (gs *Game) transfertPreviousToNextGrid() {
+	gs.previousGrid = *gs.GetNextGrid()
+	gs.nextGrid = *NewGrid(gs.GetSize())
 }
 
 // --------------------------------------------
@@ -79,7 +79,7 @@ func (gs *Game) transfertOldToNextGrid() {
 func (gs *Game) display() {
 	clearDisplay()
 	gs.displayHeader()
-	gs.GetOldGrid().Display()
+	gs.GetPreviousGrid().Display()
 	fmt.Printf("Press [Ctrl + C] to stop.\n")
 }
 
@@ -96,12 +96,12 @@ func (gs *Game) displayHeader() {
 
 // --------------------------------------------
 
-func (gs *Game) GetOldGrid() *Grid {
-	return &gs.oldGrid
+func (gs *Game) GetPreviousGrid() *Grid {
+	return &gs.previousGrid
 }
 
 func (gs *Game) GetNextGrid() *Grid {
-	return &gs.newGrid
+	return &gs.nextGrid
 }
 
 func (gs *Game) GetSize() int {
@@ -128,6 +128,6 @@ func (gs *Game) GetGeneration() int {
 	return gs.generation
 }
 
-func (gs *Game) updateGenerationNumber() {
+func (gs *Game) updateGeneration() {
 	gs.generation++
 }
