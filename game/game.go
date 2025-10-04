@@ -11,8 +11,8 @@ func Green() string      { return "\033[32m" }
 func Purple() string     { return "\033[35m" }
 func Cyan() string       { return "\033[36m" }
 
-type Game struct {
-	previousGrid Grid // Previous gen<eration
+type GameOfLife struct {
+	previousGrid Grid // Previous generation
 	nextGrid     Grid // New generation
 	size         int
 	alives       [][]int // Alives cells
@@ -21,8 +21,8 @@ type Game struct {
 	debug        bool
 }
 
-func NewGame(size int) *Game {
-	return &Game{
+func NewGameOfLife(size int) *GameOfLife {
+	return &GameOfLife{
 		previousGrid: *NewSeed(size),
 		nextGrid:     *NewGrid(size),
 		size:         size,
@@ -33,7 +33,7 @@ func NewGame(size int) *Game {
 	}
 }
 
-func (gs *Game) Play() {
+func (gs *GameOfLife) Play() {
 	// Game loop
 	for {
 		// Update
@@ -45,7 +45,7 @@ func (gs *Game) Play() {
 
 // --------------------------------------------
 
-func (gs *Game) update() {
+func (gs *GameOfLife) update() {
 	clearDisplay()
 	gs.displayHeader()
 	// Updates and display next grid state with all logical process
@@ -53,14 +53,14 @@ func (gs *Game) update() {
 	fmt.Printf("Press [Ctrl + C] to stop.\n")
 }
 
-func (gs *Game) prepareNextIteration() {
+func (gs *GameOfLife) prepareNextIteration() {
 	gs.transfertPreviousToNextGrid()
 	gs.updateGeneration()
 	// Game speed
 	time.Sleep(time.Duration(gs.GetLag()) * time.Millisecond)
 }
 
-func (gs *Game) transfertPreviousToNextGrid() {
+func (gs *GameOfLife) transfertPreviousToNextGrid() {
 	gs.previousGrid = *gs.GetNextGrid()
 	gs.nextGrid = *NewGrid(gs.GetSize())
 }
@@ -71,7 +71,7 @@ func clearDisplay() {
 	fmt.Print("\033[H\033[2J")
 }
 
-func (gs *Game) displayHeader() {
+func (gs *GameOfLife) displayHeader() {
 	fmt.Println(Purple(), "------------------", ColorReset())
 	fmt.Println(Cyan(), "  Generation:", gs.GetGeneration(), ColorReset())
 	fmt.Println(Cyan(), "  Population:", len(*gs.GetAlives()), ColorReset())
@@ -80,38 +80,38 @@ func (gs *Game) displayHeader() {
 
 // --------------------------------------------
 
-func (gs *Game) GetPreviousGrid() *Grid {
+func (gs *GameOfLife) GetPreviousGrid() *Grid {
 	return &gs.previousGrid
 }
 
-func (gs *Game) GetNextGrid() *Grid {
+func (gs *GameOfLife) GetNextGrid() *Grid {
 	return &gs.nextGrid
 }
 
-func (gs *Game) GetSize() int {
+func (gs *GameOfLife) GetSize() int {
 	return gs.size
 }
 
-func (gs *Game) GetAlives() *[][]int {
+func (gs *GameOfLife) GetAlives() *[][]int {
 	return &gs.alives
 }
 
-func (gs *Game) GetLag() int {
+func (gs *GameOfLife) GetLag() int {
 	return gs.lag
 }
 
-func (gs *Game) GetDebug() bool {
+func (gs *GameOfLife) GetDebug() bool {
 	return gs.debug
 }
 
-func (gs *Game) SetAlives(alives [][]int) {
+func (gs *GameOfLife) SetAlives(alives [][]int) {
 	gs.alives = alives
 }
 
-func (gs *Game) GetGeneration() int {
+func (gs *GameOfLife) GetGeneration() int {
 	return gs.generation
 }
 
-func (gs *Game) updateGeneration() {
+func (gs *GameOfLife) updateGeneration() {
 	gs.generation++
 }
