@@ -16,17 +16,21 @@ func NewGrid(len int) *Grid {
 
 // --------------------------------------------
 
-// Updates all cells
-func (newGrid *Grid) UpdateCells(oldGrid *Grid) {
+// Updates all cells, returns all remaining alives
+func (newGrid *Grid) UpdateCells(oldGrid *Grid) [][]int {
+
+	alives := make([][]int, len(*oldGrid))
 	for i := range *oldGrid {
 		for j := range (*oldGrid)[i] {
 			// Update cell and its adjacents
 			newGrid.UpdateCell(i, j, oldGrid)
+			if oldGrid.GetCell(i, j).IsAlive() {
+				alives = append(alives, []int{i, j})
+			}
 		}
 	}
+	return alives
 }
-
-// --------------------------------------------
 
 // Updates a given cell
 func (newGrid *Grid) UpdateCell(i, j int, oldGrid *Grid) {
@@ -37,8 +41,6 @@ func (newGrid *Grid) UpdateCell(i, j int, oldGrid *Grid) {
 
 	newGrid.SetCell(i, j, *cOld)
 }
-
-// --------------------------------------------
 
 func (oldGrid *Grid) UpdateCellAdjs(i, j int) {
 	adjs := make([]Cell, 0, 8)
@@ -69,20 +71,6 @@ func displayCell(cell *Cell) {
 }
 
 // --------------------------------------------
-
-func (m Grid) GetAlives() [][]int {
-	alives := make([][]int, len(m))
-	for i := range m {
-		for j := range m[i] {
-			// For each cell
-			c := m.GetCell(i, j)
-			if c.IsAlive() {
-				alives = append(alives, []int{i, j})
-			}
-		}
-	}
-	return alives
-}
 
 func (m Grid) GetCell(i, j int) *Cell {
 	return &m[i][j]

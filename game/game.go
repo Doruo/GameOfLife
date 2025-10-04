@@ -41,8 +41,6 @@ func NewSeed(n int) *Grid {
 func (gs *Game) Play() {
 	// Game loop
 	for {
-		// Initial
-		gs.intialize()
 		// Display
 		gs.display()
 		// Prepare next iteration
@@ -51,10 +49,6 @@ func (gs *Game) Play() {
 }
 
 // --------------------------------------------
-
-func (gs *Game) intialize() {
-	gs.SetAlives(gs.GetPreviousGrid().GetAlives())
-}
 
 func (gs *Game) prepareNextIteration() {
 	gs.update()
@@ -66,7 +60,7 @@ func (gs *Game) prepareNextIteration() {
 
 func (gs *Game) update() {
 	// Update new cells
-	gs.nextGrid.UpdateCells(gs.GetPreviousGrid())
+	gs.SetAlives(gs.nextGrid.UpdateCells(gs.GetPreviousGrid()))
 }
 
 func (gs *Game) transfertPreviousToNextGrid() {
