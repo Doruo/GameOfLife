@@ -1,7 +1,5 @@
 package game
 
-import "github.com/doruo/gameoflife/game/color"
-
 type Cell struct {
 	isAlive   bool
 	Adjacents []Cell
@@ -54,7 +52,7 @@ func (c *Cell) SetAdjacents(adjs []Cell) {
 
 func (c *Cell) ToString() string {
 	if c.isAlive {
-		return (color.Green() + "O" + color.Reset())
+		return (Green() + "O" + ColorReset())
 	}
-	return (color.Red() + "~" + color.Reset())
+	return (Red() + "~" + ColorReset())
 }

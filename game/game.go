@@ -2,14 +2,21 @@ package game
 
 import (
 	"fmt"
-	"math/rand"
 	"time"
-
-	"github.com/doruo/gameoflife/game/color"
 )
 
+func ColorReset() string { return "\033[0m" }
+func Red() string        { return "\033[31m" }
+func Green() string      { return "\033[32m" }
+func Yellow() string     { return "\033[33m" }
+func Blue() string       { return "\033[34m" }
+func Purple() string     { return "\033[35m" }
+func Cyan() string       { return "\033[36m" }
+func Gray() string       { return "\033[37m" }
+func White() string      { return "\033[97m" }
+
 type Game struct {
-	previousGrid Grid // Previous generation
+	previousGrid Grid // Previous gen<eration
 	nextGrid     Grid // New generation
 	size         int
 	alives       [][]int // Alives cells
@@ -25,17 +32,9 @@ func NewGame(size int) *Game {
 		size:         size,
 		alives:       make([][]int, size, size*size),
 		generation:   1,
-		lag:          500,
+		lag:          300,
 		debug:        false,
 	}
-}
-
-func NewSeed(n int) *Grid {
-	m := *NewGrid(n)
-	for range rand.Intn(n * n) {
-		m[rand.Intn(n)][rand.Intn(n)].SetAlive(true)
-	}
-	return &m
 }
 
 func (gs *Game) Play() {
@@ -77,10 +76,10 @@ func clearDisplay() {
 }
 
 func (gs *Game) displayHeader() {
-	fmt.Println(color.Purple(), "------------------", color.Reset())
-	fmt.Println(color.Cyan(), "  Generation:", gs.GetGeneration(), color.Reset())
-	fmt.Println(color.Cyan(), "  Population:", len(*gs.GetAlives()), color.Reset())
-	fmt.Println(color.Purple(), "------------------", color.Reset())
+	fmt.Println(Purple(), "------------------", ColorReset())
+	fmt.Println(Cyan(), "  Generation:", gs.GetGeneration(), ColorReset())
+	fmt.Println(Cyan(), "  Population:", len(*gs.GetAlives()), ColorReset())
+	fmt.Println(Purple(), "------------------", ColorReset())
 }
 
 // --------------------------------------------

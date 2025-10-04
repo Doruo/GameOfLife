@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"math/rand"
 )
 
 type Grid [][]Cell
@@ -10,6 +11,47 @@ func NewGrid(len int) *Grid {
 	m := make(Grid, len)
 	for i := range len {
 		m[i] = make([]Cell, len)
+	}
+	return &m
+}
+
+// Creates a randomly generated grid
+func NewSeed(n int) *Grid {
+	m := *NewGrid(n)
+	for range rand.Intn(n * n) {
+		m[rand.Intn(n)][rand.Intn(n)].SetAlive(true)
+	}
+	return &m
+}
+
+// NewSeedWithDensity
+func NewSeedWithDensity(n int, density float64) *Grid {
+	if density < 0 || density > 1 {
+		density = 0.25
+	}
+
+	m := *NewGrid(n)
+	for i := range n {
+		for j := range n {
+			if rand.Float64() < density {
+				m[i][j].SetAlive(true)
+			}
+		}
+	}
+	return &m
+}
+
+// NewSeedDeterministic
+func NewSeedDeterministic(n int, density float64, seed int64) *Grid {
+	r := rand.New(rand.NewSource(seed))
+
+	m := *NewGrid(n)
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if r.Float64() < density {
+				m[i][j].SetAlive(true)
+			}
+		}
 	}
 	return &m
 }
