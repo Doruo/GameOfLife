@@ -41,8 +41,8 @@ func NewSeed(n int) *Grid {
 func (gs *Game) Play() {
 	// Game loop
 	for {
-		// Display
-		gs.display()
+		// Update
+		gs.update()
 		// Prepare next iteration
 		gs.prepareNextIteration()
 	}
@@ -50,17 +50,19 @@ func (gs *Game) Play() {
 
 // --------------------------------------------
 
+func (gs *Game) update() {
+	clearDisplay()
+	gs.displayHeader()
+	// Updates and display next grid state with all logical process
+	gs.SetAlives(gs.nextGrid.UpdateCells(gs.GetPreviousGrid()))
+	fmt.Printf("Press [Ctrl + C] to stop.\n")
+}
+
 func (gs *Game) prepareNextIteration() {
-	gs.update()
 	gs.transfertPreviousToNextGrid()
 	gs.updateGeneration()
 	// Game speed
 	time.Sleep(time.Duration(gs.GetLag()) * time.Millisecond)
-}
-
-func (gs *Game) update() {
-	// Update new cells
-	gs.SetAlives(gs.nextGrid.UpdateCells(gs.GetPreviousGrid()))
 }
 
 func (gs *Game) transfertPreviousToNextGrid() {
@@ -69,13 +71,6 @@ func (gs *Game) transfertPreviousToNextGrid() {
 }
 
 // --------------------------------------------
-
-func (gs *Game) display() {
-	clearDisplay()
-	gs.displayHeader()
-	gs.GetPreviousGrid().Display()
-	fmt.Printf("Press [Ctrl + C] to stop.\n")
-}
 
 func clearDisplay() {
 	fmt.Print("\033[H\033[2J")
