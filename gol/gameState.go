@@ -16,7 +16,7 @@ type GameState struct {
 	nextGrid              Grid    // New generation
 	alives                [][]int // Alives cells
 	size, generation, lag int     // Generation number, Lag frame/milliseconds
-	debug                 bool
+	debug                 bool    // Set to true to display debug logs
 }
 
 func NewGameState(size int) *GameState {
