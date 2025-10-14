@@ -24,38 +24,6 @@ func NewSeed(n int) *Grid {
 	return &m
 }
 
-// NewSeedWithDensity
-func NewSeedWithDensity(n int, density float64) *Grid {
-	if density < 0 || density > 1 {
-		density = 0.25
-	}
-
-	m := *NewGrid(n)
-	for i := range n {
-		for j := range n {
-			if rand.Float64() < density {
-				m[i][j].SetAlive(true)
-			}
-		}
-	}
-	return &m
-}
-
-// NewSeedDeterministic
-func NewSeedDeterministic(n int, density float64, seed int64) *Grid {
-	r := rand.New(rand.NewSource(seed))
-
-	m := *NewGrid(n)
-	for i := range n {
-		for j := range n {
-			if r.Float64() < density {
-				m[i][j].SetAlive(true)
-			}
-		}
-	}
-	return &m
-}
-
 // --------------------------------------------
 
 // Updates all cells, returns all remaining alives
@@ -85,6 +53,7 @@ func (newGrid *Grid) updateCell(i, j int, oldGrid *Grid) {
 	newGrid.SetCell(i, j, *cOld)
 }
 
+// Updates all adjacents of a given cell
 func (oldGrid *Grid) updateCellAdjs(i, j int) {
 	adjs := make([]Cell, 0, 8)
 	for _, position := range getAdjacentsPos() {
