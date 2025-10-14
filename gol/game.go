@@ -13,16 +13,17 @@ type Game struct {
 	gs                        GameState
 }
 
-func NewGame(size int) *Game {
+func NewGame(width, height int) *Game {
 	return &Game{
 		title:        "Game of life",
-		screenWidth:  size,
-		screenHeight: size,
-		gs:           *NewGameState(size),
+		screenWidth:  width,
+		screenHeight: height,
+		gs:           *NewGameState(width * height),
 	}
 }
 
 func (g *Game) Update() error {
+	g.gs.Update()
 	return nil
 }
 
@@ -31,7 +32,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return outsideWidth, outsideHeight
 }
 
 func (g *Game) Run() {
