@@ -31,24 +31,15 @@ func NewGameState(size int) *GameState {
 	}
 }
 
-func (gs *GameState) Play() {
-	// Game stateloop
-	for {
-		// Update
-		gs.update()
-		// Prepare next iteration
-		gs.prepareNextIteration()
-	}
-}
-
 // --------------------------------------------
 
-func (gs *GameState) update() {
+func (gs *GameState) Update() {
 	clearDisplay()
 	gs.displayHeader()
 	// Updates and display next grid state with all logical process
 	gs.SetAlives(gs.nextGrid.UpdateCells(gs.GetPreviousGrid()))
-	fmt.Printf("Press [Ctrl + C] to stop.\n")
+	// Prepare next iteration
+	gs.prepareNextIteration()
 }
 
 func (gs *GameState) prepareNextIteration() {
