@@ -1,7 +1,11 @@
 package main
 
-import "github.com/doruo/gameoflife/gol"
+import (
+	"github.com/doruo/gameoflife/gol"
+)
 
 func main() {
-	gol.NewGame(45).Run()
+	width, heigth := 1920, 1080
+	game := gol.NewGame(width, heigth)
+	game.Run()
 }
